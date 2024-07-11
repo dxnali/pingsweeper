@@ -1,0 +1,59 @@
+#!/bin/bash
+
+####################
+#   INFORMATION!   #
+#    created by    #
+# github.com/mfbog #
+####################
+
+#######################################################
+#						      #	
+# *************************************************** #
+# WARNING: This tool is for educational and ethical   #
+# purposes only. Unauthorized use of this tool on     #
+# networks that you do not have permission to scan    #
+# is illegal and unethical.                           #
+# *************************************************** #
+#						      #
+#######################################################
+
+# Colour Variables
+BOLD_RED='\033[1;31m'
+BOLD_GREEN='\033[1;32m'
+BOLD_YELLOW='\033[1;33m'
+NC='\033[0m' 
+
+# Catch CTRL-C
+cleanup() {
+    echo -e "\n${BOLD_RED}[✘] Terminated by user [✘]${NC}"
+    exit 1
+}
+
+# Trap SIGINT and SIGTERM
+trap cleanup SIGINT SIGTERM
+
+# Prompt the user for the IP list file
+read -p $'\033[1;33m[!] Enter IP list -> \033[0m' iplist
+
+# Check if the ip list file exists and is readable
+if [ ! -r "$iplist" ]; then
+    echo -e "${BOLD_RED}[✘] Error: $iplist not found or not readable. [✘]${NC}"
+    exit 1
+fi
+
+# Read the iplist file line by line
+while IFS= read -r line; do
+    # Skip empty lines or lines starting with #
+    if [ -z "$line" ] || [[ "$line" == "#"* ]]; then
+        continue
+    fi
+
+    # Ping the IP address or hostname
+    echo -n -e "${BOLD_YELLOW}[!] Pinging $line... [!] -> ${NC}"
+    if ping -c 1 -W 1 "$line" >/dev/null 2>&1; then
+        echo -e "${BOLD_GREEN}[✔] Online [✔]${NC}"
+    else
+        echo -e "${BOLD_RED}[✘] Offline [✘]${NC}"
+    fi
+done < "$iplist"
+
