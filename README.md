@@ -9,9 +9,9 @@ Change directory into it:
 cd pingsweeper
 
 Create an ip list text file in this layout:
-192.168.1.0
-192.168.1.1
-192.168.1.2
+192.168.1.0\n
+192.168.1.1\n
+192.168.1.2\n
 etc...
 
 Save the ip list and execute the tool:
